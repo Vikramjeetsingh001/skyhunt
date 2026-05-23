@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkyHunt - Hyderabad Airport Game</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- SCREEN 1: Landing / Signup -->
+<div id="screen-signup" class="screen active">
+    <div class="card">
+        <h1>✈️ SkyHunt</h1>
+        <p class="tagline">Hyderabad Airport Treasure Hunt</p>
+        <p class="desc">Collect 10 hidden items. Win exclusive coupons.</p>
+
+        <input type="text" id="name" placeholder="Your Name" />
+        <input type="tel" id="phone" placeholder="Phone Number" maxlength="10" />
+        <button onclick="signupUser()">Start Playing 🚀</button>
+    </div>
+</div>
+
+<!-- SCREEN 2: Warning -->
+<div id="screen-warning" class="screen">
+    <div class="card">
+        <h2>⚠️ Important</h2>
+        <p class="warning-text">
+            If your flight departs within the next
+            <strong>45 minutes</strong>, please do not
+            play this game. Head to your gate immediately.
+        </p>
+        <button onclick="showScreen('screen-howto')">
+            I Understand
+        </button>
+    </div>
+</div>
+
+<!-- SCREEN 3: How to Play -->
+<div id="screen-howto" class="screen">
+    <div class="card">
+        <h2>🎮 How to Play</h2>
+        <ul class="rules">
+            <li>🗺️ Open the airport map to see item locations</li>
+            <li>📷 Walk to that area & open camera</li>
+            <li>✨ Tap the digital item to collect it</li>
+            <li>🎁 Collect 5 items → 2 coupons</li>
+            <li>🏆 Collect 10 items → 4 coupons</li>
+            <li>⏳ No time limit. Have fun!</li>
+        </ul>
+        <button onclick="startGame()">Let's Begin 🚀</button>
+    </div>
+</div>
+
+<!-- SCREEN 4: Game (placeholder for Day 2) -->
+<div id="screen-game" class="screen">
+    <div class="card">
+        <h2>🎯 Game Dashboard</h2>
+        <p>Welcome, <span id="player-name"></span>!</p>
+        <p>Map & Camera coming on Day 2 & 3...</p>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module" src="app.js"></script>
+
+</body>
+</html>
