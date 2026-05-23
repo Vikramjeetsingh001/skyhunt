@@ -358,3 +358,171 @@ window.simulateLocation = function() {
   document.getElementById('status-text').textContent =
     `🎬 Demo Mode: You are near ${nextItem.store}`;
 };
+
+// ============================================
+// DAY 4: COUPONS + WIN SCREEN
+// ============================================
+
+const allCoupons = [
+  { id: "C1", emoji: "🍦", title: "Buy 1 Get 1 Free",    store: "Baskin Robbins",    category: "food",      unlockAt: 5 },
+  { id: "C2", emoji: "👜", title: "10% off on ₹5000+",   store: "Hidesign",          category: "fashion",   unlockAt: 5 },
+  { id: "C3", emoji: "☕", title: "Free Coffee Upgrade", store: "Starbucks",         category: "food",      unlockAt: 10 },
+  { id: "C4", emoji: "🧴", title: "15% off Duty-Free",   store: "Duty Free Store",   category: "dutyfree",  unlockAt: 10 }
+];
+
+let earnedCoupons = [];
+let gameStartTime = null;
+
+// Patch startGame to start timer
+const originalStartGame = window.startGame;
+window.startGame = async function () {
+  await originalStartGame();
+  gameStartTime = Date.now();
+  updateBadge();
+};
+
+// Patch collectItem to award coupons
+const originalCollect = window.collectItem;
+window.collectItem = async function (itemId) {
+  await originalCollect(itemId);
+
+  const count = collectedItems.length;
+  if (count === 5 || count === 10) {
+    awardCoupons(count);
+    pulseBoardingPass();
+  }
+
+  updateBadge();
+
+  if (count === 10) {
+    setTimeout(triggerWin, 800);
+  }
+};
+
+function awardCoupons(threshold) {
+  const newOnes = allCoupons.filter(c =>
+    c.unlockAt === threshold && !earnedCoupons.find(e => e.id === c.id)
+  );
+
+  newOnes.forEach(c => {
+    earnedCoupons.push({ ...c, code: generateCouponCode() });
+  });
+
+  saveCouponsToFirebase();
+}
+
+function generateCouponCode() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "SKY-";
+  for (let i = 0; i < 4; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return code;
+}
+
+async function saveCouponsToFirebase() {
+  try {
+    if (playerDocId) {
+      const ref = doc(db, "players", playerDocId);
+      await updateDoc(ref, { coupons: earnedCoupons });
+    }
+  } catch (e) {
+    console.warn("Could not save coupons:", e);
+  }
+}
+
+// Update the red badge on boarding pass icon
+function updateBadge() {
+  const badge = document.getElementById("coupon-badge");
+  if (!badge) return;
+
+  badge.textContent = earnedCoupons.length;
+  if (earnedCoupons.length === 0) {
+    badge.classList.add("hidden");
+  } else {
+    badge.classList.remove("hidden");
+  }
+}
+
+// Pulse animation when new coupon earned
+function pulseBoardingPass() {
+  const icon = document.getElementById("boarding-pass-icon");
+  if (!icon) return;
+  icon.classList.remove("pulse");
+  void icon.offsetWidth; // restart animation
+  icon.classList.add("pulse");
+  setTimeout(() => icon.classList.remove("pulse"), 2500);
+}
+
+// Show coupons screen
+window.showCouponsScreen = function () {
+  showScreen("screen-coupons");
+  renderCoupons();
+};
+
+function renderCoupons() {
+  const list = document.getElementById("coupons-list");
+  const noMsg = document.getElementById("no-coupons-msg");
+
+  list.innerHTML = "";
+
+  if (earnedCoupons.length === 0) {
+    noMsg.style.display = "block";
+    return;
+  }
+  noMsg.style.display = "none";
+
+  earnedCoupons.forEach(c => {
+    const div = document.createElement("div");
+    div.className = `coupon ${c.category}`;
+    div.innerHTML = `
+      <div class="coupon-emoji">${c.emoji}</div>
+      <div class="coupon-content">
+        <div class="coupon-title">${c.title}</div>
+        <div class="coupon-store">at ${c.store}</div>
+        <div class="coupon-code">${c.code}</div>
+        <div class="coupon-valid">⏰ Valid today only</div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+// Win screen
+function triggerWin() {
+  if (typeof window.closeCameraMode === "function") {
+    try { window.closeCameraMode(); } catch(e) {}
+  }
+
+  const elapsedMs = Date.now() - (gameStartTime || Date.now());
+  const totalSec = Math.floor(elapsedMs / 1000);
+  const h = String(Math.floor(totalSec / 3600)).padStart(2, "0");
+  const m = String(Math.floor((totalSec % 3600) / 60)).padStart(2, "0");
+  const s = String(totalSec % 60).padStart(2, "0");
+
+  document.getElementById("stat-time").textContent = `${h}:${m}:${s}`;
+  document.getElementById("stat-items").textContent = collectedItems.length;
+
+  showScreen("screen-win");
+  launchConfetti();
+}
+
+function launchConfetti() {
+  const container = document.getElementById("confetti-container");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const colors = ["#f5b800", "#e91e63", "#1976d2", "#4caf50", "#ff8a00", "#000"];
+  for (let i = 0; i < 80; i++) {
+    const piece = document.createElement("div");
+    piece.className = "confetti-piece";
+    piece.style.left = Math.random() * 100 + "vw";
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDuration = (2 + Math.random() * 2) + "s";
+    piece.style.animationDelay = (Math.random() * 1) + "s";
+    piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+    container.appendChild(piece);
+  }
+
+  setTimeout(() => { container.innerHTML = ""; }, 6000);
+}
