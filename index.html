@@ -4,10 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SkyHunt - Hyderabad Airport Game</title>
-
-<!-- Leaflet CSS -->
-https://unpkg.com/leaflet@1.9.4/dist/leaflet.css
-
+<link://unpkg.com/leaflet@1.9.4/dist/leaflet.css
 style.css
 </head>
 <body>
@@ -55,11 +52,9 @@ style.css
 
 <!-- SCREEN 4: GAME DASHBOARD -->
 <div id="screen-game" class="screen">
-
-  <!-- ✅ NEW: Boarding Pass Icon (top-right) -->
   <div class="boarding-pass-icon" id="boarding-pass-icon" onclick="showCouponsScreen()">
     🎫
-    <span class="coupon-badge" id="coupon-badge">0</span>
+    <span class="coupon-badge hidden" id="coupon-badge">0</span>
   </div>
 
   <div class="game-header">
@@ -72,21 +67,17 @@ style.css
     </div>
   </div>
 
-  <!-- Progress Bar -->
   <div class="progress-bar-container">
     <div class="progress-bar" id="progress-bar"></div>
   </div>
 
-  <!-- Map -->
   <div id="map"></div>
 
-  <!-- Items List -->
   <div class="items-list">
     <h4>🎁 Items to Find</h4>
     <div id="items-container"></div>
   </div>
 
-  <!-- Camera Button -->
   <button class="camera-btn" onclick="openCameraMode()">
     📷 Open Camera Mode
   </button>
@@ -157,11 +148,8 @@ style.css
   <div id="confetti-container"></div>
 </div>
 
-<!-- Leaflet JS -->
-https://unpkg.com/leaflet@1.9.4/dist/leaflet.jsscript>
-
-<!-- Firebase + App Logic -->
-app.jsscript>
+<script src="httpsleaflet@1.9.4/dist/leaflet.js
+app.js
 
 </body>
 </html>
