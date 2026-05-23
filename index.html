@@ -6,9 +6,9 @@
 <title>SkyHunt - Hyderabad Airport Game</title>
 
 <!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+https://unpkg.com/leaflet@1.9.4/dist/leaflet.css
 
-<link rel="stylesheet" href="style.css">
+style.css
 </head>
 <body>
 
@@ -18,8 +18,14 @@
     <h1>✈️ SkyHunt</h1>
     <p class="tagline">Hyderabad Airport Treasure Hunt</p>
     <p class="desc">Collect 10 hidden items. Win exclusive coupons.</p>
+
     <input type="text" id="name" placeholder="Your Name" />
     <input type="tel" id="phone" placeholder="Phone Number" maxlength="10" />
+
+    <!-- ✅ DAY 4: Boarding Time Input -->
+    <label for="boarding" class="input-label">🛫 Your Boarding Time</label>
+    <input type="time" id="boarding" />
+
     <button onclick="signupUser()">Start Playing →</button>
   </div>
 </div>
@@ -53,12 +59,14 @@
   </div>
 </div>
 
-<!-- SCREEN 4: GAME DASHBOARD (Day 2) -->
+<!-- SCREEN 4: GAME DASHBOARD -->
 <div id="screen-game" class="screen">
   <div class="game-header">
     <div>
       <h3>Hi, <span id="player-name">Player</span> 👋</h3>
       <p class="small-text">Find & collect all 10 items</p>
+      <!-- ✅ DAY 4: Boarding Countdown -->
+      <div class="boarding-timer" id="boarding-timer">⏰ Boarding in: --:--:--</div>
     </div>
     <div class="progress-circle">
       <span id="progress-text">0/10</span>
@@ -79,13 +87,18 @@
     <div id="items-container"></div>
   </div>
 
-  <!-- ✅ DAY 3 UPDATE: Camera Button now opens Camera Mode -->
+  <!-- Camera Button -->
   <button class="camera-btn" onclick="openCameraMode()">
     📷 Open Camera Mode
   </button>
+
+  <!-- ✅ DAY 4: View Coupons Button -->
+  <button class="coupons-btn" onclick="showCouponsScreen()">
+    🎟️ View My Coupons (<span id="coupons-count">0</span>)
+  </button>
 </div>
 
-<!-- ✅ SCREEN 5: CAMERA MODE (NEW IN DAY 3) -->
+<!-- SCREEN 5: CAMERA MODE -->
 <div id="screen-camera" class="screen">
 
   <!-- Top Bar -->
@@ -112,11 +125,56 @@
 
 </div>
 
+<!-- ✅ DAY 4: SCREEN 6 - COUPONS VAULT -->
+<div id="screen-coupons" class="screen">
+  <div class="card">
+    <div class="coupons-header">
+      <button class="back-btn-small" onclick="showScreen('screen-game')">← Back</button>
+      <h2>🎟️ My Coupons</h2>
+    </div>
+    <p class="coupon-note">Show these codes at partner stores. Valid today only.</p>
+    <div id="coupons-list"></div>
+    <div id="no-coupons-msg" style="display:none; text-align:center; padding:30px; color:#888;">
+      🔒 Collect 5 items to unlock your first coupons!
+    </div>
+  </div>
+</div>
+
+<!-- ✅ DAY 4: SCREEN 7 - WIN SCREEN -->
+<div id="screen-win" class="screen">
+  <div class="card win-card">
+    <div class="trophy">🏆</div>
+    <h1 class="win-title">You Won!</h1>
+    <p class="win-subtitle">All 10 items collected!</p>
+
+    <div class="win-stats">
+      <div class="stat-box">
+        <div class="stat-num" id="stat-items">10</div>
+        <div class="stat-label">Items</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="stat-time">00:00:00</div>
+        <div class="stat-label">Play Time</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Coupons</div>
+      </div>
+    </div>
+
+    <button onclick="showCouponsScreen()">🎟️ View My Coupons</button>
+    <button class="secondary-btn" onclick="showScreen('screen-game')">Back to Map</button>
+  </div>
+
+  <!-- Confetti container -->
+  <div id="confetti-container"></div>
+</div>
+
 <!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+https://unpkg.com/leaflet@1.9.4/dist/leaflet.jsscript>
 
 <!-- Firebase + App Logic -->
-<script type="module" src="app.js"></script>
+app.jsscript>
 
 </body>
 </html>

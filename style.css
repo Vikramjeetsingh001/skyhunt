@@ -432,3 +432,234 @@ button:hover {
         opacity: 1;
     }
 }
+
+/* ====== DAY 4: COUPONS + BOARDING TIMER + WIN ====== */
+
+/* Input label */
+.input-label {
+  display: block;
+  text-align: left;
+  font-size: 13px;
+  color: #666;
+  margin: 8px 0 4px 4px;
+  font-weight: 600;
+}
+
+/* Boarding countdown on game screen */
+.boarding-timer {
+  background: #fff3cd;
+  color: #856404;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: bold;
+  margin-top: 8px;
+  display: inline-block;
+  border: 1px solid #f5b800;
+}
+
+.boarding-timer.urgent {
+  background: #ffebee;
+  color: #c62828;
+  border-color: #c62828;
+  animation: pulse-red 1s infinite;
+}
+
+@keyframes pulse-red {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+/* Coupons Button on Game Screen */
+.coupons-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #f5b800, #ff8a00);
+  color: #fff;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* Coupons Screen */
+.coupons-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.back-btn-small {
+  width: auto;
+  background: #f4f4f4;
+  color: #000;
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 8px;
+  margin: 0;
+}
+
+.coupon-note {
+  font-size: 13px;
+  color: #888;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* COUPON CARD (Classic Ticket Style) */
+.coupon {
+  position: relative;
+  background: #fff;
+  border: 2px dashed #000;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+/* Color stripe by category */
+.coupon::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 8px;
+}
+
+.coupon.food::before { background: #ff8a00; }
+.coupon.fashion::before { background: #e91e63; }
+.coupon.electronics::before { background: #1976d2; }
+.coupon.dutyfree::before { background: #4caf50; }
+
+.coupon-emoji {
+  font-size: 38px;
+  flex-shrink: 0;
+}
+
+.coupon-content {
+  flex: 1;
+  text-align: left;
+}
+
+.coupon-title {
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 3px;
+}
+
+.coupon-store {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.coupon-code {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.coupon-valid {
+  font-size: 10px;
+  color: #c62828;
+  margin-top: 6px;
+  font-weight: bold;
+}
+
+/* WIN SCREEN */
+#screen-win {
+  max-width: 420px;
+}
+
+.win-card {
+  background: linear-gradient(135deg, #fff, #fff8e1);
+  text-align: center;
+  padding: 40px 25px;
+}
+
+.trophy {
+  font-size: 80px;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.win-title {
+  font-size: 36px;
+  margin: 10px 0 5px;
+}
+
+.win-subtitle {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.win-stats {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+  margin: 25px 0;
+  padding: 18px;
+  background: #f4f4f4;
+  border-radius: 14px;
+}
+
+.stat-box {
+  flex: 1;
+}
+
+.stat-num {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.secondary-btn {
+  background: #f4f4f4 !important;
+  color: #000 !important;
+}
+
+/* CONFETTI */
+#confetti-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 14px;
+  top: -20px;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+  }
+}
