@@ -4,8 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SkyHunt - Hyderabad Airport Game</title>
-<link://unpkg.com/leaflet@1.9.4/dist/leaflet.css
-style.css
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -50,13 +53,8 @@ style.css
   </div>
 </div>
 
-<!-- SCREEN 4: GAME DASHBOARD -->
+<!-- SCREEN 4: GAME DASHBOARD (Day 2) -->
 <div id="screen-game" class="screen">
-  <div class="boarding-pass-icon" id="boarding-pass-icon" onclick="showCouponsScreen()">
-    🎫
-    <span class="coupon-badge hidden" id="coupon-badge">0</span>
-  </div>
-
   <div class="game-header">
     <div>
       <h3>Hi, <span id="player-name">Player</span> 👋</h3>
@@ -67,89 +65,58 @@ style.css
     </div>
   </div>
 
+  <!-- Progress Bar -->
   <div class="progress-bar-container">
     <div class="progress-bar" id="progress-bar"></div>
   </div>
 
+  <!-- Map -->
   <div id="map"></div>
 
+  <!-- Items List -->
   <div class="items-list">
     <h4>🎁 Items to Find</h4>
     <div id="items-container"></div>
   </div>
 
+  <!-- ✅ DAY 3 UPDATE: Camera Button now opens Camera Mode -->
   <button class="camera-btn" onclick="openCameraMode()">
     📷 Open Camera Mode
   </button>
 </div>
 
-<!-- SCREEN 5: CAMERA MODE -->
+<!-- ✅ SCREEN 5: CAMERA MODE (NEW IN DAY 3) -->
 <div id="screen-camera" class="screen">
+
+  <!-- Top Bar -->
   <div class="camera-topbar">
     <button class="back-btn" onclick="closeCameraMode()">← Back</button>
     <div class="camera-progress" id="cam-progress">0/10</div>
     <button class="demo-btn" onclick="simulateLocation()">🎬 Demo</button>
   </div>
 
+  <!-- Live Camera Video -->
   <video id="camera-video" autoplay playsinline></video>
 
+  <!-- AR Item Overlay -->
   <div id="ar-item" class="ar-item hidden" onclick="collectCurrentItem()">
     <div class="ar-glow"></div>
     <div class="ar-emoji" id="ar-emoji">🍦</div>
     <div class="ar-label" id="ar-label">Tap to collect!</div>
   </div>
 
+  <!-- Bottom Status -->
   <div class="camera-status">
     <p id="status-text">📡 Searching for items nearby...</p>
   </div>
+
 </div>
 
-<!-- SCREEN 6: COUPONS VAULT -->
-<div id="screen-coupons" class="screen">
-  <div class="card">
-    <div class="coupons-header">
-      <button class="back-btn-small" onclick="showScreen('screen-game')">← Back</button>
-      <h2>🎫 My Boarding Pass</h2>
-    </div>
-    <p class="coupon-note">Show these codes at partner stores. Valid today only.</p>
-    <div id="coupons-list"></div>
-    <div id="no-coupons-msg" style="display:none; text-align:center; padding:30px; color:#888;">
-      🔒 Collect 5 items to unlock your first coupons!
-    </div>
-  </div>
-</div>
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<!-- SCREEN 7: WIN SCREEN -->
-<div id="screen-win" class="screen">
-  <div class="card win-card">
-    <div class="trophy">🏆</div>
-    <h1 class="win-title">You Won!</h1>
-    <p class="win-subtitle">All 10 items collected!</p>
-
-    <div class="win-stats">
-      <div class="stat-box">
-        <div class="stat-num" id="stat-items">10</div>
-        <div class="stat-label">Items</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-num" id="stat-time">00:00:00</div>
-        <div class="stat-label">Play Time</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-num">4</div>
-        <div class="stat-label">Coupons</div>
-      </div>
-    </div>
-
-    <button onclick="showCouponsScreen()">🎫 View My Coupons</button>
-    <button class="secondary-btn" onclick="showScreen('screen-game')">Back to Map</button>
-  </div>
-
-  <div id="confetti-container"></div>
-</div>
-
-<script src="httpsleaflet@1.9.4/dist/leaflet.js
-app.js
+<!-- Firebase + App Logic -->
+<script type="module" src="app.js"></script>
 
 </body>
 </html>
