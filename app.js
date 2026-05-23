@@ -173,3 +173,188 @@ window.collectItem = async function(itemId) {
 
   console.log(`✅ Collected: ${items.find(i => i.id === itemId).name}`);
 };
+
+// ============================================
+// DAY 3: CAMERA MODE + GPS + ITEM DETECTION
+// ============================================
+
+let videoStream = null;
+let currentNearbyItem = null;
+let locationWatcherId = null;
+let demoLocationActive = false;
+
+// 🎯 STEP 1: Open Camera Screen
+window.openCameraMode = async function() {
+  showScreen('screen-camera');
+  updateCameraProgress();
+
+  // Try to start camera
+  try {
+    videoStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment' }, // back camera
+      audio: false
+    });
+    document.getElementById('camera-video').srcObject = videoStream;
+    document.getElementById('status-text').textContent = '📡 Searching for items nearby...';
+  } catch (err) {
+    document.getElementById('status-text').textContent = '⚠️ Camera permission denied. Use Demo mode!';
+    console.error('Camera error:', err);
+  }
+
+  // Start GPS tracking
+  startLocationTracking();
+};
+
+// 🎯 STEP 2: Close Camera Screen
+window.closeCameraMode = function() {
+  // Stop camera
+  if (videoStream) {
+    videoStream.getTracks().forEach(track => track.stop());
+    videoStream = null;
+  }
+  // Stop GPS
+  if (locationWatcherId !== null) {
+    navigator.geolocation.clearWatch(locationWatcherId);
+    locationWatcherId = null;
+  }
+  demoLocationActive = false;
+  showScreen('screen-game');
+};
+
+// 🎯 STEP 3: Track User Location
+function startLocationTracking() {
+  if (!navigator.geolocation) {
+    document.getElementById('status-text').textContent = '⚠️ GPS not supported. Use Demo mode!';
+    return;
+  }
+
+  locationWatcherId = navigator.geolocation.watchPosition(
+    (pos) => {
+      if (demoLocationActive) return; // skip if demo mode is on
+      checkNearbyItems(pos.coords.latitude, pos.coords.longitude);
+    },
+    (err) => {
+      document.getElementById('status-text').textContent = '⚠️ Allow location access or use Demo mode';
+    },
+    { enableHighAccuracy: true, maximumAge: 1000 }
+  );
+}
+
+// 🎯 STEP 4: Calculate Distance Between Two Points (Haversine Formula)
+function getDistanceMeters(lat1, lng1, lat2, lng2) {
+  const R = 6371000; // Earth's radius in meters
+  const toRad = (deg) => deg * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat/2) ** 2 +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLng/2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// 🎯 STEP 5: Check if any item is nearby
+function checkNearbyItems(userLat, userLng) {
+  const TRIGGER_DISTANCE = 30; // 30 meters
+
+  let nearest = null;
+  let minDist = Infinity;
+
+  items.forEach(item => {
+    if (collectedItems.includes(item.id)) return; // skip already-collected
+
+    const dist = getDistanceMeters(userLat, userLng, item.lat, item.lng);
+    if (dist < TRIGGER_DISTANCE && dist < minDist) {
+      minDist = dist;
+      nearest = item;
+    }
+  });
+
+  if (nearest) {
+    showARItem(nearest);
+  } else {
+    hideARItem();
+    document.getElementById('status-text').textContent =
+      '📡 Searching... Walk near a store to find items';
+  }
+}
+
+// 🎯 STEP 6: Show item floating on camera
+function showARItem(item) {
+  currentNearbyItem = item;
+  document.getElementById('ar-emoji').textContent = item.emoji;
+  document.getElementById('ar-label').textContent = `Tap to collect ${item.name}!`;
+  document.getElementById('ar-item').classList.remove('hidden');
+  document.getElementById('status-text').textContent =
+    `✨ ${item.name} found near ${item.store}! Tap it!`;
+}
+
+function hideARItem() {
+  currentNearbyItem = null;
+  document.getElementById('ar-item').classList.add('hidden');
+}
+
+// 🎯 STEP 7: Collect the item when tapped
+window.collectCurrentItem = async function() {
+  if (!currentNearbyItem) return;
+  const item = currentNearbyItem;
+
+  // Use existing collectItem function from Day 2
+  await collectItem(item.id);
+
+  // Show success popup
+  showSuccessPopup(item);
+
+  // Hide item
+  hideARItem();
+
+  // Update progress display
+  updateCameraProgress();
+
+  // Check rewards
+  if (collectedItems.length === 5) {
+    setTimeout(() => alert('🎉 5 items collected! You unlocked 2 coupons!'), 1500);
+  }
+  if (collectedItems.length === 10) {
+    setTimeout(() => {
+      alert('🏆 ALL 10 collected! You unlocked 4 exclusive coupons!');
+      closeCameraMode();
+    }, 1500);
+  }
+};
+
+// 🎯 STEP 8: Update progress on camera screen
+function updateCameraProgress() {
+  document.getElementById('cam-progress').textContent =
+    `${collectedItems.length}/10`;
+}
+
+// 🎯 STEP 9: Success Popup Animation
+function showSuccessPopup(item) {
+  const popup = document.createElement('div');
+  popup.className = 'success-popup';
+  popup.innerHTML = `
+    <div class="big-emoji">${item.emoji}</div>
+    <h3>${item.name} Collected!</h3>
+    <p style="color:#666;">from ${item.store}</p>
+  `;
+  document.body.appendChild(popup);
+  setTimeout(() => popup.remove(), 2000);
+}
+
+// 🎯 STEP 10: DEMO MODE (Simulate walking to next item)
+window.simulateLocation = function() {
+  demoLocationActive = true;
+
+  // Find next uncollected item
+  const nextItem = items.find(i => !collectedItems.includes(i.id));
+
+  if (!nextItem) {
+    document.getElementById('status-text').textContent = '🏆 All items collected!';
+    return;
+  }
+
+  // Pretend user is right next to this item
+  checkNearbyItems(nextItem.lat, nextItem.lng);
+  document.getElementById('status-text').textContent =
+    `🎬 Demo Mode: You are near ${nextItem.store}`;
+};

@@ -244,3 +244,191 @@ button:hover {
     background: #f5b800;
     border-color: #f5b800;
 }
+
+/* ====== DAY 3: CAMERA MODE STYLES ====== */
+
+#screen-camera {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    padding: 0;
+    background: #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+
+#camera-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.camera-topbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 18px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.7), transparent);
+}
+
+.back-btn,
+.demo-btn {
+    background: rgba(255,255,255,0.9);
+    color: #000;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.camera-progress {
+    background: #000;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 15px;
+    border: 2px solid #fff;
+}
+
+.camera-status {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    padding: 20px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.8), transparent);
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+}
+
+/* AR Item Overlay */
+
+.ar-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    cursor: pointer;
+    text-align: center;
+    animation: float 2s ease-in-out infinite;
+}
+
+.ar-item.hidden {
+    display: none;
+}
+
+.ar-emoji {
+    font-size: 100px;
+    filter: drop-shadow(0 0 20px gold);
+    position: relative;
+    z-index: 2;
+}
+
+.ar-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(255,215,0,0.6), transparent);
+    border-radius: 50%;
+    z-index: 1;
+    animation: pulse 1.5s infinite;
+}
+
+.ar-label {
+    background: #fff;
+    color: #000;
+    padding: 8px 18px;
+    border-radius: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+/* Animations */
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(-50%, -50%) translateY(0);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) translateY(-15px);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.3;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.7;
+    }
+}
+
+/* Success popup */
+
+.success-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    color: #000;
+    padding: 30px 40px;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 100;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+    animation: pop 0.4s ease-out;
+}
+
+.success-popup .big-emoji {
+    font-size: 70px;
+    margin-bottom: 10px;
+}
+
+.success-popup h3 {
+    font-size: 22px;
+    margin-bottom: 6px;
+}
+
+@keyframes pop {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}

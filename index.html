@@ -14,85 +14,108 @@
 
 <!-- SCREEN 1: Signup -->
 <div id="screen-signup" class="screen active">
-    <div class="card">
-        <h1>✈ SkyHunt</h1>
-        <p class="tagline">Hyderabad Airport Treasure Hunt</p>
-        <p class="desc">Collect 10 hidden items. Win exclusive coupons.</p>
-        <input type="text" id="name" placeholder="Your Name" />
-        <input type="tel" id="phone" placeholder="Phone Number" maxlength="10" />
-        <button onclick="signupUser()">Start Playing ➜</button>
-    </div>
+  <div class="card">
+    <h1>✈️ SkyHunt</h1>
+    <p class="tagline">Hyderabad Airport Treasure Hunt</p>
+    <p class="desc">Collect 10 hidden items. Win exclusive coupons.</p>
+    <input type="text" id="name" placeholder="Your Name" />
+    <input type="tel" id="phone" placeholder="Phone Number" maxlength="10" />
+    <button onclick="signupUser()">Start Playing →</button>
+  </div>
 </div>
 
 <!-- SCREEN 2: Warning -->
 <div id="screen-warning" class="screen">
-    <div class="card">
-        <h2>⚠ Important</h2>
-        <p class="warning-text">
-            If your flight departs within the next
-            <strong>45 minutes</strong>, please do not
-            play this game. Head to your gate immediately.
-        </p>
-        <button onclick="showScreen('screen-howto')">I Understand</button>
-    </div>
+  <div class="card">
+    <h2>⚠️ Important</h2>
+    <p class="warning-text">
+      If your flight departs within the next 
+      <strong>45 minutes</strong>, please do not 
+      play this game. Head to your gate immediately.
+    </p>
+    <button onclick="showScreen('screen-howto')">I Understand</button>
+  </div>
 </div>
 
 <!-- SCREEN 3: How to Play -->
 <div id="screen-howto" class="screen">
-    <div class="card">
-        <h2>🗺 How to Play</h2>
-        <ul class="rules">
-            <li>🗺 Open the airport map to see item locations</li>
-            <li>🚶 Walk to that area & open camera</li>
-            <li>✨ Tap the digital item to collect it</li>
-            <li>🎁 Collect 5 items ➜ 2 coupons</li>
-            <li>🏆 Collect 10 items ➜ 4 coupons</li>
-            <li>⏰ No time limit. Have fun!</li>
-        </ul>
-
-        <button onclick="startGame()">Let's Begin 🚀</button>
-    </div>
+  <div class="card">
+    <h2>🎮 How to Play</h2>
+    <ul class="rules">
+      <li>🗺️ Open the airport map to see item locations</li>
+      <li>📷 Walk to that area & open camera</li>
+      <li>✨ Tap the digital item to collect it</li>
+      <li>🎁 Collect 5 items → 2 coupons</li>
+      <li>🏆 Collect 10 items → 4 coupons</li>
+      <li>⏰ No time limit. Have fun!</li>
+    </ul>
+    <button onclick="startGame()">Let's Begin 🚀</button>
+  </div>
 </div>
 
-<!-- SCREEN 4: GAME DASHBOARD (NEW IN DAY 2) -->
+<!-- SCREEN 4: GAME DASHBOARD (Day 2) -->
 <div id="screen-game" class="screen">
-
-    <div class="game-header">
-        <div>
-            <h3>Hi, <span id="player-name">Player</span> 👋</h3>
-            <p class="small-text">Find & collect all 10 items</p>
-        </div>
-
-        <div class="progress-circle">
-            <span id="progress-text">0/10</span>
-        </div>
+  <div class="game-header">
+    <div>
+      <h3>Hi, <span id="player-name">Player</span> 👋</h3>
+      <p class="small-text">Find & collect all 10 items</p>
     </div>
-
-    <!-- Progress Bar -->
-    <div class="progress-bar-container">
-        <div class="progress-bar" id="progress-bar"></div>
+    <div class="progress-circle">
+      <span id="progress-text">0/10</span>
     </div>
+  </div>
 
-    <!-- Map -->
-    <div id="map"></div>
+  <!-- Progress Bar -->
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
 
-    <!-- Items List -->
-    <div class="items-list">
-        <h4>🎁 Items to Find</h4>
-        <div id="items-container"></div>
-    </div>
+  <!-- Map -->
+  <div id="map"></div>
 
-    <!-- Camera Button (Day 3) -->
-    <button class="camera-btn" onclick="alert('Camera mode unlocks in Day 3!')">
-        📷 Open Camera Mode
-    </button>
+  <!-- Items List -->
+  <div class="items-list">
+    <h4>🎁 Items to Find</h4>
+    <div id="items-container"></div>
+  </div>
+
+  <!-- ✅ DAY 3 UPDATE: Camera Button now opens Camera Mode -->
+  <button class="camera-btn" onclick="openCameraMode()">
+    📷 Open Camera Mode
+  </button>
+</div>
+
+<!-- ✅ SCREEN 5: CAMERA MODE (NEW IN DAY 3) -->
+<div id="screen-camera" class="screen">
+
+  <!-- Top Bar -->
+  <div class="camera-topbar">
+    <button class="back-btn" onclick="closeCameraMode()">← Back</button>
+    <div class="camera-progress" id="cam-progress">0/10</div>
+    <button class="demo-btn" onclick="simulateLocation()">🎬 Demo</button>
+  </div>
+
+  <!-- Live Camera Video -->
+  <video id="camera-video" autoplay playsinline></video>
+
+  <!-- AR Item Overlay -->
+  <div id="ar-item" class="ar-item hidden" onclick="collectCurrentItem()">
+    <div class="ar-glow"></div>
+    <div class="ar-emoji" id="ar-emoji">🍦</div>
+    <div class="ar-label" id="ar-label">Tap to collect!</div>
+  </div>
+
+  <!-- Bottom Status -->
+  <div class="camera-status">
+    <p id="status-text">📡 Searching for items nearby...</p>
+  </div>
 
 </div>
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<!-- Firebase -->
+<!-- Firebase + App Logic -->
 <script type="module" src="app.js"></script>
 
 </body>
