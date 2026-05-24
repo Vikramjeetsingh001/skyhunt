@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>SkyHunt - Hyderabad Airport Game</title>
 
 <!-- Leaflet CSS -->
@@ -10,38 +11,87 @@
 
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 <!-- SCREEN 1: Signup -->
 <div id="screen-signup" class="screen active">
+
   <div class="card">
+
     <h1>✈️ SkyHunt</h1>
+
     <p class="tagline">Hyderabad Airport Treasure Hunt</p>
-    <p class="desc">Collect 10 hidden items. Win exclusive coupons.</p>
-    <input type="text" id="name" placeholder="Your Name" />
-<input type="tel" id="phone" placeholder="Phone Number" maxlength="10" />
-<input type="datetime-local" id="flight-time" />
-<button onclick="signupUser()">Start Playing →</button>
+
+    <p class="desc">
+      Collect 10 hidden items. Win exclusive coupons.
+    </p>
+
+    <!-- Name -->
+    <input 
+      type="text" 
+      id="name" 
+      placeholder="Your Name" 
+    />
+
+    <!-- Phone -->
+    <input 
+      type="tel" 
+      id="phone" 
+      placeholder="Phone Number" 
+      maxlength="10" 
+    />
+
+    <!-- Flight Time Label -->
+    <label class="input-label">
+      Flight Time
+    </label>
+
+    <!-- Flight Time -->
+    <input 
+      type="time"
+      id="flight-time"
+      class="time-input"
+    />
+
+    <!-- Button -->
+    <button onclick="signupUser()">
+      Start Playing →
+    </button>
+
   </div>
+
 </div>
 
 <!-- SCREEN 2: Warning -->
 <div id="screen-warning" class="screen">
+
   <div class="card">
+
     <h2>⚠️ Important</h2>
+
     <p class="warning-text">
-      If your flight departs within the next 
-      <strong>45 minutes</strong>, please do not 
-      play this game. Head to your gate immediately.
+      If your flight departs within the next
+      <strong>45 minutes</strong>,
+      please do not play this game.
+      Head to your gate immediately.
     </p>
-    <button onclick="showScreen('screen-howto')">I Understand</button>
+
+    <button onclick="showScreen('screen-howto')">
+      I Understand
+    </button>
+
   </div>
+
 </div>
 
 <!-- SCREEN 3: How to Play -->
 <div id="screen-howto" class="screen">
+
   <div class="card">
+
     <h2>🎮 How to Play</h2>
+
     <ul class="rules">
       <li>🗺️ Open the airport map to see item locations</li>
       <li>📷 Walk to that area & open camera</li>
@@ -50,20 +100,34 @@
       <li>🏆 Collect 10 items → 4 coupons</li>
       <li>⏰ No time limit. Have fun!</li>
     </ul>
-    <button onclick="startGame()">Let's Begin 🚀</button>
+
+    <button onclick="startGame()">
+      Let's Begin 🚀
+    </button>
+
   </div>
+
 </div>
 
-<!-- SCREEN 4: GAME DASHBOARD (Day 2) -->
+<!-- SCREEN 4: GAME -->
 <div id="screen-game" class="screen">
+
   <div class="game-header">
+
     <div>
-      <h3>Hi, <span id="player-name">Player</span> 👋</h3>
-      <p class="small-text">Find & collect all 10 items</p>
+      <h3>
+        Hi, <span id="player-name">Player</span> 👋
+      </h3>
+
+      <p class="small-text">
+        Find & collect all 10 items
+      </p>
     </div>
+
     <div class="progress-circle">
       <span id="progress-text">0/10</span>
     </div>
+
   </div>
 
   <!-- Progress Bar -->
@@ -74,49 +138,73 @@
   <!-- Map -->
   <div id="map"></div>
 
-  <!-- Items List -->
+  <!-- Items -->
   <div class="items-list">
+
     <h4>🎁 Items to Find</h4>
+
     <div id="items-container"></div>
+
   </div>
 
-  <!-- ✅ DAY 3 UPDATE: Camera Button now opens Camera Mode -->
+  <!-- Camera Button -->
   <button class="camera-btn" onclick="openCameraMode()">
     📷 Open Camera Mode
   </button>
+
 </div>
 
-<!-- ✅ SCREEN 5: CAMERA MODE (NEW IN DAY 3) -->
+<!-- SCREEN 5: CAMERA MODE -->
 <div id="screen-camera" class="screen">
 
   <!-- Top Bar -->
   <div class="camera-topbar">
-    <button class="back-btn" onclick="closeCameraMode()">← Back</button>
-    <div class="camera-progress" id="cam-progress">0/10</div>
-    <button class="demo-btn" onclick="simulateLocation()">🎬 Demo</button>
+
+    <button class="back-btn" onclick="closeCameraMode()">
+      ← Back
+    </button>
+
+    <div class="camera-progress" id="cam-progress">
+      0/10
+    </div>
+
+    <button class="demo-btn" onclick="simulateLocation()">
+      🎬 Demo
+    </button>
+
   </div>
 
-  <!-- Live Camera Video -->
+  <!-- Camera -->
   <video id="camera-video" autoplay playsinline></video>
 
-  <!-- AR Item Overlay -->
+  <!-- AR Item -->
   <div id="ar-item" class="ar-item hidden" onclick="collectCurrentItem()">
+
     <div class="ar-glow"></div>
-    <div class="ar-emoji" id="ar-emoji">🍦</div>
-    <div class="ar-label" id="ar-label">Tap to collect!</div>
+
+    <div class="ar-emoji" id="ar-emoji">
+      🍦
+    </div>
+
+    <div class="ar-label" id="ar-label">
+      Tap to collect!
+    </div>
+
   </div>
 
-  <!-- Bottom Status -->
+  <!-- Status -->
   <div class="camera-status">
-    <p id="status-text">📡 Searching for items nearby...</p>
+    <p id="status-text">
+      📡 Searching for items nearby...
+    </p>
   </div>
 
 </div>
 
-<!-- Leaflet JS -->
+<!-- Leaflet -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<!-- Firebase + App Logic -->
+<!-- App -->
 <script type="module" src="app.js"></script>
 
 </body>
