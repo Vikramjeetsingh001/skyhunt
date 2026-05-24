@@ -56,7 +56,7 @@ h2 {
     color: #333;
 }
 
-/* ====== INPUT STYLES ====== */
+/* ====== INPUTS ====== */
 
 input {
     width: 100%;
@@ -72,7 +72,7 @@ input:focus {
     border-color: #000;
 }
 
-/* ====== FLIGHT TIME FIELD ====== */
+/* ====== FLIGHT INPUT ====== */
 
 .input-label {
     display: block;
@@ -126,7 +126,7 @@ button:hover {
     transform: scale(1.02);
 }
 
-/* ====== WARNING SCREEN ====== */
+/* ====== WARNING ====== */
 
 .warning-text {
     font-size: 16px;
@@ -179,6 +179,25 @@ button:hover {
 .small-text {
     font-size: 13px;
     color: #666;
+}
+
+/* ====== FLIGHT TIMER ====== */
+
+.flight-timer {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.flight-timer.safe {
+    color: #1a7f37;
+}
+
+.flight-timer.warning {
+    color: #d93025;
 }
 
 .progress-circle {

@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>SkyHunt - Hyderabad Airport Game</title>
 
 <!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
@@ -21,34 +25,35 @@
 
     <h1>✈️ SkyHunt</h1>
 
-    <p class="tagline">Hyderabad Airport Treasure Hunt</p>
+    <p class="tagline">
+      Hyderabad Airport Treasure Hunt
+    </p>
 
     <p class="desc">
       Collect 10 hidden items. Win exclusive coupons.
     </p>
 
     <!-- Name -->
-    <input 
-      type="text" 
-      id="name" 
-      placeholder="Your Name" 
+    <input
+      type="text"
+      id="name"
+      placeholder="Your Name"
     />
 
     <!-- Phone -->
-    <input 
-      type="tel" 
-      id="phone" 
-      placeholder="Phone Number" 
-      maxlength="10" 
+    <input
+      type="tel"
+      id="phone"
+      placeholder="Phone Number"
+      maxlength="10"
     />
 
-    <!-- Flight Time Label -->
+    <!-- Flight Time -->
     <label class="input-label">
       Flight Time
     </label>
 
-    <!-- Flight Time -->
-    <input 
+    <input
       type="time"
       id="flight-time"
       class="time-input"
@@ -85,7 +90,7 @@
 
 </div>
 
-<!-- SCREEN 3: How to Play -->
+<!-- SCREEN 3: How To Play -->
 <div id="screen-howto" class="screen">
 
   <div class="card">
@@ -115,13 +120,17 @@
   <div class="game-header">
 
     <div>
+
       <h3>
-        Hi, <span id="player-name">Player</span> 👋
+        Hi,
+        <span id="player-name">Player</span>
+        👋
       </h3>
 
       <p class="small-text">
         Find & collect all 10 items
       </p>
+
     </div>
 
     <div class="progress-circle">
@@ -130,9 +139,16 @@
 
   </div>
 
+  <!-- Flight Countdown -->
+  <div class="flight-timer" id="flight-timer">
+    🕒 Calculating time left...
+  </div>
+
   <!-- Progress Bar -->
   <div class="progress-bar-container">
+
     <div class="progress-bar" id="progress-bar"></div>
+
   </div>
 
   <!-- Map -->
@@ -148,8 +164,11 @@
   </div>
 
   <!-- Camera Button -->
-  <button class="camera-btn" onclick="openCameraMode()">
+  <button class="camera-btn"
+  onclick="openCameraMode()">
+
     📷 Open Camera Mode
+
   </button>
 
 </div>
@@ -157,46 +176,69 @@
 <!-- SCREEN 5: CAMERA MODE -->
 <div id="screen-camera" class="screen">
 
-  <!-- Top Bar -->
+  <!-- Topbar -->
   <div class="camera-topbar">
 
-    <button class="back-btn" onclick="closeCameraMode()">
+    <button class="back-btn"
+    onclick="closeCameraMode()">
+
       ← Back
+
     </button>
 
-    <div class="camera-progress" id="cam-progress">
+    <div class="camera-progress"
+    id="cam-progress">
+
       0/10
+
     </div>
 
-    <button class="demo-btn" onclick="simulateLocation()">
+    <button class="demo-btn"
+    onclick="simulateLocation()">
+
       🎬 Demo
+
     </button>
 
   </div>
 
   <!-- Camera -->
-  <video id="camera-video" autoplay playsinline></video>
+  <video
+    id="camera-video"
+    autoplay
+    playsinline>
+  </video>
 
   <!-- AR Item -->
-  <div id="ar-item" class="ar-item hidden" onclick="collectCurrentItem()">
+  <div id="ar-item"
+  class="ar-item hidden"
+  onclick="collectCurrentItem()">
 
     <div class="ar-glow"></div>
 
-    <div class="ar-emoji" id="ar-emoji">
+    <div class="ar-emoji"
+    id="ar-emoji">
+
       🍦
+
     </div>
 
-    <div class="ar-label" id="ar-label">
+    <div class="ar-label"
+    id="ar-label">
+
       Tap to collect!
+
     </div>
 
   </div>
 
   <!-- Status -->
   <div class="camera-status">
+
     <p id="status-text">
       📡 Searching for items nearby...
     </p>
+
   </div>
 
 </div>
@@ -204,7 +246,7 @@
 <!-- Leaflet -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<!-- App -->
+<!-- App JS -->
 <script type="module" src="app.js"></script>
 
 </body>
