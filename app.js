@@ -20,40 +20,52 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
 
 // ====== ITEMS ======
 const items = [
   { id: 1, emoji: "🍦", name: "Ice Cream", store: "Baskin Robbins", lat: 17.2403, lng: 78.4294 },
-
   { id: 2, emoji: "☕", name: "Coffee", store: "Starbucks", lat: 17.2406, lng: 78.4298 },
-
   { id: 3, emoji: "🕶️", name: "Sunglasses", store: "Sunglass Hut", lat: 17.2410, lng: 78.4292 },
-
   { id: 4, emoji: "🎧", name: "Headphones", store: "Bose", lat: 17.2401, lng: 78.4301 },
-
   { id: 5, emoji: "📚", name: "Book", store: "WHSmith", lat: 17.2408, lng: 78.4305 },
-
   { id: 6, emoji: "🍫", name: "Chocolate", store: "Duty Free", lat: 17.2412, lng: 78.4299 },
-
   { id: 7, emoji: "👜", name: "Handbag", store: "Hidesign", lat: 17.2399, lng: 78.4296 },
-
   { id: 8, emoji: "⌚", name: "Watch", store: "Titan", lat: 17.2415, lng: 78.4302 },
-
   { id: 9, emoji: "🧴", name: "Perfume", store: "Duty Free Perfumes", lat: 17.2404, lng: 78.4307 },
-
   { id: 10, emoji: "🧸", name: "Teddy", store: "Hamleys", lat: 17.2418, lng: 78.4296 }
+];
+
+// ====== COUPONS ======
+const coupons = [
+  {
+    brand: "Starbucks",
+    offer: "20% OFF on Coffee ☕"
+  },
+  {
+    brand: "Burger King",
+    offer: "Free Fries 🍟"
+  },
+  {
+    brand: "Baskin Robbins",
+    offer: "Buy 1 Get 1 🍦"
+  },
+  {
+    brand: "Hidesign",
+    offer: "15% OFF 👜"
+  }
 ];
 
 // ====== GLOBAL STATE ======
 let collectedItems = [];
-
 let playerDocId = null;
-
 let mapInstance = null;
+let countdownInterval = null;
 
-// ====== SCREEN NAVIGATION ======
+// ============================================
+// SCREEN NAVIGATION
+// ============================================
+
 window.showScreen = function(screenId) {
 
   document
@@ -65,7 +77,10 @@ window.showScreen = function(screenId) {
     .classList.add('active');
 };
 
-// ====== SIGNUP ======
+// ============================================
+// SIGNUP
+// ============================================
+
 window.signupUser = async function() {
 
   const name =
@@ -77,7 +92,6 @@ window.signupUser = async function() {
   const flightTime =
     document.getElementById('flight-time').value;
 
-  // Validation
   if (!name || phone.length !== 10 || !flightTime) {
 
     alert('Please enter valid details');
@@ -87,7 +101,6 @@ window.signupUser = async function() {
 
   try {
 
-    // Save to Firebase
     const docRef = await addDoc(
       collection(db, "players"),
       {
@@ -99,26 +112,10 @@ window.signupUser = async function() {
       }
     );
 
-    // Save locally
-    localStorage.setItem(
-      'playerName',
-      name
-    );
-
-    localStorage.setItem(
-      'playerPhone',
-      phone
-    );
-
-    localStorage.setItem(
-      'playerFlightTime',
-      flightTime
-    );
-
-    localStorage.setItem(
-      'playerDocId',
-      docRef.id
-    );
+    localStorage.setItem('playerName', name);
+    localStorage.setItem('playerPhone', phone);
+    localStorage.setItem('playerFlightTime', flightTime);
+    localStorage.setItem('playerDocId', docRef.id);
 
     showScreen('screen-warning');
 
@@ -128,7 +125,10 @@ window.signupUser = async function() {
   }
 };
 
-// ====== START GAME ======
+// ============================================
+// START GAME
+// ============================================
+
 window.startGame = function() {
 
   const name =
@@ -151,12 +151,17 @@ window.startGame = function() {
 
     updateProgress();
 
+    updateCouponCount();
+
     startFlightCountdown();
 
   }, 300);
 };
 
-// ====== MAP ======
+// ============================================
+// MAP
+// ============================================
+
 function initMap() {
 
   if (mapInstance) {
@@ -175,7 +180,6 @@ function initMap() {
     }
   ).addTo(mapInstance);
 
-  // Add markers
   items.forEach(item => {
 
     const isCollected =
@@ -185,11 +189,8 @@ function initMap() {
       className:
         'custom-marker' +
         (isCollected ? ' collected' : ''),
-
       html: item.emoji,
-
       iconSize: [38, 38],
-
       iconAnchor: [19, 19]
     });
 
@@ -222,7 +223,10 @@ function initMap() {
   });
 }
 
-// ====== RENDER ITEMS ======
+// ============================================
+// ITEMS
+// ============================================
+
 function renderItemsList() {
 
   const container =
@@ -249,7 +253,10 @@ function renderItemsList() {
   });
 }
 
-// ====== PROGRESS ======
+// ============================================
+// PROGRESS
+// ============================================
+
 function updateProgress() {
 
   const count =
@@ -267,9 +274,91 @@ function updateProgress() {
   ).style.width = percent + '%';
 }
 
-// ====== FLIGHT COUNTDOWN ======
+// ============================================
+// COUPONS
+// ============================================
 
-let countdownInterval = null;
+function getUnlockedCoupons() {
+
+  if (collectedItems.length >= 10) {
+    return coupons;
+  }
+
+  if (collectedItems.length >= 5) {
+    return coupons.slice(0, 2);
+  }
+
+  return [];
+}
+
+function updateCouponCount() {
+
+  const countEl =
+    document.getElementById('coupon-count');
+
+  if (!countEl) return;
+
+  countEl.textContent =
+    getUnlockedCoupons().length;
+}
+
+window.openCoupons = function() {
+
+  const modal =
+    document.getElementById('coupon-modal');
+
+  const list =
+    document.getElementById('coupon-list');
+
+  list.innerHTML = '';
+
+  const unlocked =
+    getUnlockedCoupons();
+
+  if (unlocked.length === 0) {
+
+    list.innerHTML = `
+      <p style="color:#666;">
+        Collect more items to unlock coupons 🎁
+      </p>
+    `;
+
+  } else {
+
+    unlocked.forEach(coupon => {
+
+      const div =
+        document.createElement('div');
+
+      div.className = 'coupon-card';
+
+      div.innerHTML = `
+        <div class="coupon-brand">
+          ${coupon.brand}
+        </div>
+
+        <div class="coupon-offer">
+          ${coupon.offer}
+        </div>
+      `;
+
+      list.appendChild(div);
+    });
+  }
+
+  modal.classList.remove('hidden');
+};
+
+window.closeCoupons = function() {
+
+  document
+    .getElementById('coupon-modal')
+    .classList.add('hidden');
+};
+
+// ============================================
+// FLIGHT COUNTDOWN
+// ============================================
 
 function startFlightCountdown() {
 
@@ -288,16 +377,12 @@ function startFlightCountdown() {
     const [hours, minutes] =
       storedFlightTime.split(':');
 
-    // Today's flight time
     let flightDate = new Date();
 
     flightDate.setHours(hours);
-
     flightDate.setMinutes(minutes);
-
     flightDate.setSeconds(0);
 
-    // If passed today -> tomorrow
     if (flightDate < now) {
 
       flightDate.setDate(
@@ -308,7 +393,6 @@ function startFlightCountdown() {
     const diffMs =
       flightDate - now;
 
-    // If passed
     if (diffMs <= 0) {
 
       timerEl.innerHTML =
@@ -321,7 +405,6 @@ function startFlightCountdown() {
       return;
     }
 
-    // Convert to HH:MM:SS
     const totalSeconds =
       Math.floor(diffMs / 1000);
 
@@ -342,7 +425,6 @@ function startFlightCountdown() {
     timerEl.innerHTML =
       `🕒 ${formatted} left for departure`;
 
-    // Color logic
     if (diffMs <= 45 * 60 * 1000) {
 
       timerEl.classList.remove('safe');
@@ -357,21 +439,21 @@ function startFlightCountdown() {
     }
   }
 
-  // First run
   updateCountdown();
 
-  // Clear previous interval
   if (countdownInterval) {
 
     clearInterval(countdownInterval);
   }
 
-  // Update every second
   countdownInterval =
     setInterval(updateCountdown, 1000);
 }
 
-// ====== COLLECT ITEM ======
+// ============================================
+// COLLECT ITEM
+// ============================================
+
 window.collectItem = async function(itemId) {
 
   if (collectedItems.includes(itemId)) {
@@ -409,6 +491,8 @@ window.collectItem = async function(itemId) {
 
   updateProgress();
 
+  updateCouponCount();
+
   console.log(
     `✅ Collected: ${
       items.find(i => i.id === itemId).name
@@ -421,14 +505,10 @@ window.collectItem = async function(itemId) {
 // ============================================
 
 let videoStream = null;
-
 let currentNearbyItem = null;
-
 let locationWatcherId = null;
-
 let demoLocationActive = false;
 
-// ====== OPEN CAMERA ======
 window.openCameraMode = async function() {
 
   showScreen('screen-camera');
@@ -460,20 +540,13 @@ window.openCameraMode = async function() {
       'status-text'
     ).textContent =
       '⚠️ Camera permission denied. Use Demo mode!';
-
-    console.error(
-      'Camera error:',
-      err
-    );
   }
 
   startLocationTracking();
 };
 
-// ====== CLOSE CAMERA ======
 window.closeCameraMode = function() {
 
-  // Stop camera
   if (videoStream) {
 
     videoStream
@@ -483,7 +556,6 @@ window.closeCameraMode = function() {
     videoStream = null;
   }
 
-  // Stop GPS
   if (locationWatcherId !== null) {
 
     navigator.geolocation.clearWatch(
@@ -498,7 +570,6 @@ window.closeCameraMode = function() {
   showScreen('screen-game');
 };
 
-// ====== GPS TRACKING ======
 function startLocationTracking() {
 
   if (!navigator.geolocation) {
@@ -506,7 +577,7 @@ function startLocationTracking() {
     document.getElementById(
       'status-text'
     ).textContent =
-      '⚠️ GPS not supported. Use Demo mode!';
+      '⚠️ GPS not supported';
 
     return;
   }
@@ -529,7 +600,7 @@ function startLocationTracking() {
         document.getElementById(
           'status-text'
         ).textContent =
-          '⚠️ Allow location access or use Demo mode';
+          '⚠️ Allow location access';
       },
 
       {
@@ -539,7 +610,6 @@ function startLocationTracking() {
     );
 }
 
-// ====== DISTANCE ======
 function getDistanceMeters(
   lat1,
   lng1,
@@ -571,7 +641,6 @@ function getDistanceMeters(
     );
 }
 
-// ====== CHECK NEARBY ======
 function checkNearbyItems(
   userLat,
   userLng
@@ -619,11 +688,10 @@ function checkNearbyItems(
     document.getElementById(
       'status-text'
     ).textContent =
-      '📡 Searching... Walk near a store to find items';
+      '📡 Searching nearby...';
   }
 }
 
-// ====== SHOW ITEM ======
 function showARItem(item) {
 
   currentNearbyItem = item;
@@ -644,10 +712,9 @@ function showARItem(item) {
   document.getElementById(
     'status-text'
   ).textContent =
-    `✨ ${item.name} found near ${item.store}! Tap it!`;
+    `✨ ${item.name} found near ${item.store}!`;
 }
 
-// ====== HIDE ITEM ======
 function hideARItem() {
 
   currentNearbyItem = null;
@@ -657,7 +724,6 @@ function hideARItem() {
   ).classList.add('hidden');
 }
 
-// ====== COLLECT CURRENT ======
 window.collectCurrentItem =
 async function() {
 
@@ -673,13 +739,12 @@ async function() {
 
   updateCameraProgress();
 
-  // Rewards
   if (collectedItems.length === 5) {
 
     setTimeout(() => {
 
       alert(
-        '🎉 5 items collected! You unlocked 2 coupons!'
+        '🎉 2 Coupons Unlocked!'
       );
 
     }, 1500);
@@ -690,7 +755,7 @@ async function() {
     setTimeout(() => {
 
       alert(
-        '🏆 ALL 10 collected! You unlocked 4 exclusive coupons!'
+        '🏆 4 Coupons Unlocked!'
       );
 
       closeCameraMode();
@@ -699,7 +764,6 @@ async function() {
   }
 };
 
-// ====== CAMERA PROGRESS ======
 function updateCameraProgress() {
 
   document.getElementById(
@@ -708,7 +772,6 @@ function updateCameraProgress() {
     `${collectedItems.length}/10`;
 }
 
-// ====== SUCCESS POPUP ======
 function showSuccessPopup(item) {
 
   const popup =
@@ -739,7 +802,6 @@ function showSuccessPopup(item) {
   );
 }
 
-// ====== DEMO MODE ======
 window.simulateLocation = function() {
 
   demoLocationActive = true;

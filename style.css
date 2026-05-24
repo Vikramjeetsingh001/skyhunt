@@ -56,7 +56,7 @@ h2 {
     color: #333;
 }
 
-/* ====== INPUTS ====== */
+/* INPUTS */
 
 input {
     width: 100%;
@@ -72,7 +72,7 @@ input:focus {
     border-color: #000;
 }
 
-/* ====== FLIGHT INPUT ====== */
+/* FLIGHT INPUT */
 
 .input-label {
     display: block;
@@ -101,12 +101,7 @@ input:focus {
     border-color: #000;
 }
 
-.time-input::-webkit-calendar-picker-indicator {
-    cursor: pointer;
-    opacity: 0.8;
-}
-
-/* ====== BUTTON ====== */
+/* BUTTONS */
 
 button {
     width: 100%;
@@ -126,7 +121,7 @@ button:hover {
     transform: scale(1.02);
 }
 
-/* ====== WARNING ====== */
+/* WARNING */
 
 .warning-text {
     font-size: 16px;
@@ -138,7 +133,7 @@ button:hover {
     color: #856404;
 }
 
-/* ====== HOW TO PLAY ====== */
+/* RULES */
 
 .rules {
     list-style: none;
@@ -152,7 +147,7 @@ button:hover {
     font-size: 15px;
 }
 
-/* ====== GAME DASHBOARD ====== */
+/* GAME */
 
 #screen-game {
     max-width: 500px;
@@ -173,7 +168,6 @@ button:hover {
 
 .game-header h3 {
     font-size: 18px;
-    color: #000;
 }
 
 .small-text {
@@ -181,15 +175,18 @@ button:hover {
     color: #666;
 }
 
-/* ====== FLIGHT TIMER ====== */
+/* TIMER + COUPONS */
+
+.top-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
 
 .flight-timer {
     font-size: 15px;
     font-weight: 700;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
 .flight-timer.safe {
@@ -199,6 +196,83 @@ button:hover {
 .flight-timer.warning {
     color: #d93025;
 }
+
+.coupon-btn {
+    width: auto;
+    margin: 0;
+    padding: 10px 14px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+}
+
+/* COUPON MODAL */
+
+.coupon-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.coupon-modal.hidden {
+    display: none;
+}
+
+.coupon-content {
+    background: #fff;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 20px;
+    padding: 22px;
+}
+
+.coupon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close-coupon-btn {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    background: none;
+    color: #000;
+    font-size: 24px;
+}
+
+.coupon-list {
+    display: grid;
+    gap: 14px;
+}
+
+.coupon-card {
+    background: linear-gradient(135deg,#000,#333);
+    color: #fff;
+    padding: 20px;
+    border-radius: 16px;
+}
+
+.coupon-brand {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.coupon-offer {
+    font-size: 15px;
+    opacity: 0.9;
+}
+
+/* PROGRESS */
 
 .progress-circle {
     width: 60px;
@@ -210,7 +284,6 @@ button:hover {
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 16px;
 }
 
 .progress-bar-container {
@@ -224,10 +297,12 @@ button:hover {
 
 .progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, #000, #444);
+    background: linear-gradient(90deg,#000,#444);
     width: 0%;
     transition: width 0.4s ease;
 }
+
+/* MAP */
 
 #map {
     width: 100%;
@@ -237,18 +312,19 @@ button:hover {
     margin-bottom: 20px;
 }
 
+/* ITEMS */
+
 .items-list {
     margin-bottom: 20px;
 }
 
 .items-list h4 {
     margin-bottom: 10px;
-    font-size: 16px;
 }
 
 #items-container {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5,1fr);
     gap: 8px;
 }
 
@@ -264,7 +340,6 @@ button:hover {
     font-size: 22px;
     filter: grayscale(100%);
     opacity: 0.4;
-    transition: all 0.3s;
 }
 
 .item-icon.collected {
@@ -272,52 +347,20 @@ button:hover {
     opacity: 1;
     background: #fff8e1;
     border-color: #f5b800;
-    transform: scale(1.05);
 }
+
+/* CAMERA */
 
 .camera-btn {
     width: 100%;
-    background: #000;
-    color: #fff;
-    padding: 16px;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
 }
-
-/* ====== MAP MARKERS ====== */
-
-.custom-marker {
-    background: #fff;
-    border: 3px solid #000;
-    width: 38px !important;
-    height: 38px !important;
-    border-radius: 50%;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-}
-
-.custom-marker.collected {
-    background: #f5b800;
-    border-color: #f5b800;
-}
-
-/* ====== CAMERA MODE ====== */
 
 #screen-camera {
     width: 100vw;
     height: 100vh;
-    max-width: 100%;
-    padding: 0;
-    background: #000;
     position: fixed;
-    top: 0;
-    left: 0;
+    inset: 0;
+    background: #000;
     overflow: hidden;
 }
 
@@ -325,10 +368,6 @@ button:hover {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
 }
 
 .camera-topbar {
@@ -341,19 +380,13 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     padding: 15px 18px;
-    background: linear-gradient(180deg, rgba(0,0,0,0.7), transparent);
 }
 
 .back-btn,
 .demo-btn {
-    background: rgba(255,255,255,0.9);
-    color: #000;
-    border: none;
+    width: auto;
     padding: 8px 14px;
     border-radius: 20px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
 }
 
 .camera-progress {
@@ -361,8 +394,6 @@ button:hover {
     color: #fff;
     padding: 8px 16px;
     border-radius: 20px;
-    font-weight: bold;
-    font-size: 15px;
     border: 2px solid #fff;
 }
 
@@ -373,23 +404,16 @@ button:hover {
     right: 0;
     z-index: 10;
     padding: 20px;
-    background: linear-gradient(0deg, rgba(0,0,0,0.8), transparent);
     text-align: center;
-    color: #fff;
-    font-size: 14px;
 }
 
-/* ====== AR ITEM ====== */
+/* AR */
 
 .ar-item {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 5;
-    cursor: pointer;
-    text-align: center;
-    animation: float 2s ease-in-out infinite;
 }
 
 .ar-item.hidden {
@@ -398,22 +422,6 @@ button:hover {
 
 .ar-emoji {
     font-size: 100px;
-    filter: drop-shadow(0 0 20px gold);
-    position: relative;
-    z-index: 2;
-}
-
-.ar-glow {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 180px;
-    height: 180px;
-    background: radial-gradient(circle, rgba(255,215,0,0.6), transparent);
-    border-radius: 50%;
-    z-index: 1;
-    animation: pulse 1.5s infinite;
 }
 
 .ar-label {
@@ -422,41 +430,10 @@ button:hover {
     padding: 8px 18px;
     border-radius: 20px;
     margin-top: 20px;
-    font-weight: bold;
     display: inline-block;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
 }
 
-/* ====== ANIMATIONS ====== */
-
-@keyframes float {
-    0%, 100% {
-        transform: translate(-50%, -50%) translateY(0);
-    }
-
-    50% {
-        transform: translate(-50%, -50%) translateY(-15px);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.7;
-    }
-
-    50% {
-        transform: translate(-50%, -50%) scale(1.2);
-        opacity: 0.3;
-    }
-
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.7;
-    }
-}
-
-/* ====== SUCCESS POPUP ====== */
+/* POPUP */
 
 .success-popup {
     position: fixed;
@@ -467,30 +444,6 @@ button:hover {
     color: #000;
     padding: 30px 40px;
     border-radius: 20px;
-    text-align: center;
     z-index: 100;
-    box-shadow: 0 10px 50px rgba(0,0,0,0.5);
-    animation: pop 0.4s ease-out;
-}
-
-.success-popup .big-emoji {
-    font-size: 70px;
-    margin-bottom: 10px;
-}
-
-.success-popup h3 {
-    font-size: 22px;
-    margin-bottom: 6px;
-}
-
-@keyframes pop {
-    0% {
-        transform: translate(-50%, -50%) scale(0.5);
-        opacity: 0;
-    }
-
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-    }
+    text-align: center;
 }
