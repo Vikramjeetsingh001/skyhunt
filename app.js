@@ -1,6 +1,6 @@
 // Import Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, doc, updateDoc, getDocs, query, where } 
+import { getFirestore, collection, addDoc, doc, updateDoc, getDocs, query, where }
   from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // 🔥 KEEP YOUR FIREBASE CONFIG (don't change)
@@ -18,16 +18,16 @@ const db = getFirestore(app);
 
 // ====== 10 ITEMS DATA ======
 const items = [
-  { id: 1, emoji: "🍦", name: "Ice Cream",  store: "Baskin Robbins",   lat: 17.2403, lng: 78.4294 },
-  { id: 2, emoji: "☕", name: "Coffee",     store: "Starbucks",        lat: 17.2406, lng: 78.4298 },
-  { id: 3, emoji: "🕶️", name: "Sunglasses", store: "Sunglass Hut",     lat: 17.2410, lng: 78.4292 },
-  { id: 4, emoji: "🎧", name: "Headphones", store: "Bose",             lat: 17.2401, lng: 78.4301 },
-  { id: 5, emoji: "📚", name: "Book",       store: "WHSmith",          lat: 17.2408, lng: 78.4305 },
-  { id: 6, emoji: "🍫", name: "Chocolate",  store: "Duty Free",        lat: 17.2412, lng: 78.4299 },
-  { id: 7, emoji: "👜", name: "Handbag",    store: "Hidesign",         lat: 17.2399, lng: 78.4296 },
-  { id: 8, emoji: "⌚", name: "Watch",      store: "Titan",            lat: 17.2415, lng: 78.4302 },
-  { id: 9, emoji: "🧴", name: "Perfume",    store: "Duty Free Perfumes", lat: 17.2404, lng: 78.4307 },
-  { id: 10, emoji: "🧸", name: "Teddy",     store: "Hamleys",          lat: 17.2418, lng: 78.4296 }
+  { id: 1,  emoji: "🍦", name: "Ice Cream",   store: "Baskin Robbins",     lat: 17.2403, lng: 78.4294 },
+  { id: 2,  emoji: "☕", name: "Coffee",      store: "Starbucks",          lat: 17.2406, lng: 78.4298 },
+  { id: 3,  emoji: "🕶️", name: "Sunglasses",  store: "Sunglass Hut",       lat: 17.2410, lng: 78.4292 },
+  { id: 4,  emoji: "🎧", name: "Headphones",  store: "Bose",               lat: 17.2401, lng: 78.4301 },
+  { id: 5,  emoji: "📚", name: "Book",        store: "WHSmith",            lat: 17.2408, lng: 78.4305 },
+  { id: 6,  emoji: "🍫", name: "Chocolate",   store: "Duty Free",          lat: 17.2412, lng: 78.4299 },
+  { id: 7,  emoji: "👜", name: "Handbag",     store: "Hidesign",           lat: 17.2399, lng: 78.4296 },
+  { id: 8,  emoji: "⌚", name: "Watch",       store: "Titan",              lat: 17.2415, lng: 78.4302 },
+  { id: 9,  emoji: "🧴", name: "Perfume",     store: "Duty Free Perfumes", lat: 17.2404, lng: 78.4307 },
+  { id: 10, emoji: "🧸", name: "Teddy",       store: "Hamleys",            lat: 17.2418, lng: 78.4296 }
 ];
 
 // ====== GLOBAL STATE ======
@@ -35,34 +35,103 @@ let collectedItems = [];
 let playerDocId = null;
 let mapInstance = null;
 
+// ✅ NEW (Step 2): Flight timer state
+let flightTimerInterval = null;
+const LS_FLIGHT_KEY = "skymate_flight_target_ms";
+
 // ====== SCREEN NAVIGATION ======
 window.showScreen = function(screenId) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(screenId).classList.add('active');
 };
 
+// ✅ NEW (Step 2): Helper — convert "HH:MM" to a target timestamp
+function computeFlightTargetMs(timeStr) {
+  const [hh, mm] = timeStr.split(":").map(Number);
+  const now = new Date();
+  const target = new Date(
+    now.getFullYear(), now.getMonth(), now.getDate(),
+    hh, mm, 0, 0
+  );
+  if (target.getTime() <= now.getTime()) {
+    target.setDate(target.getDate() + 1); // already passed → tomorrow
+  }
+  return target.getTime();
+}
+
+// ✅ NEW (Step 2): Live flight countdown ticker
+function startFlightTimer() {
+  const valueEl = document.getElementById('flightTimeLeft');
+  if (!valueEl) return;
+
+  const pad = (n) => String(n).padStart(2, "0");
+
+  function formatHMS(ms) {
+    const total = Math.max(0, Math.floor(ms / 1000));
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
+    return `${pad(h)}:${pad(m)}:${pad(s)}`;
+  }
+
+  function applyColor(ms) {
+    valueEl.classList.remove("green", "amber", "red", "neutral");
+    if (ms <= 0) { valueEl.classList.add("red"); return; }
+    const mins = ms / 60000;
+    if (mins > 60)       valueEl.classList.add("green");
+    else if (mins >= 30) valueEl.classList.add("amber");
+    else                 valueEl.classList.add("red");
+  }
+
+  function tick() {
+    const targetMs = Number(localStorage.getItem(LS_FLIGHT_KEY));
+    if (!targetMs) {
+      valueEl.textContent = "--:--:--";
+      valueEl.classList.add("neutral");
+      return;
+    }
+    const remaining = targetMs - Date.now();
+    valueEl.textContent = remaining > 0 ? formatHMS(remaining) : "00:00:00";
+    applyColor(remaining);
+  }
+
+  if (flightTimerInterval) clearInterval(flightTimerInterval);
+  tick();
+  flightTimerInterval = setInterval(tick, 1000);
+}
+
 // ====== SIGNUP ======
 window.signupUser = async function() {
   const name = document.getElementById('name').value.trim();
   const phone = document.getElementById('phone').value.trim();
+  const flightTimeStr = document.getElementById('flightTime').value; // ✅ NEW
 
   if (!name || phone.length !== 10) {
     alert('Please enter a valid name and 10-digit phone number');
     return;
   }
 
+  // ✅ NEW (Step 2): Flight time is mandatory
+  if (!flightTimeStr) {
+    alert('Please enter your Flight Departure Time.');
+    return;
+  }
+
+  // ✅ NEW: Compute target timestamp (today, or tomorrow if already passed)
+  const targetMs = computeFlightTargetMs(flightTimeStr);
+  localStorage.setItem(LS_FLIGHT_KEY, String(targetMs));
+
   try {
     const docRef = await addDoc(collection(db, "players"), {
       name: name,
       phone: phone,
+      flightTime: flightTimeStr,   // (stored for future use — harmless)
       itemsCollected: [],
       createdAt: new Date().toISOString()
     });
-
     localStorage.setItem('playerName', name);
     localStorage.setItem('playerPhone', phone);
     localStorage.setItem('playerDocId', docRef.id);
-
     showScreen('screen-warning');
   } catch (error) {
     alert('Error: ' + error.message);
@@ -81,36 +150,28 @@ window.startGame = function() {
     initMap();
     renderItemsList();
     updateProgress();
+    startFlightTimer();   // ✅ NEW (Step 2)
   }, 300);
 };
 
 // ====== INITIALIZE MAP ======
 function initMap() {
-  // Hyderabad RGIA Airport coordinates
-  if (mapInstance) {
-    mapInstance.remove();
-  }
-
+  if (mapInstance) { mapInstance.remove(); }
   mapInstance = L.map('map').setView([17.2408, 78.4299], 17);
-
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap',
     maxZoom: 19
   }).addTo(mapInstance);
 
-  // Add markers for all 10 items
   items.forEach(item => {
     const isCollected = collectedItems.includes(item.id);
-
     const icon = L.divIcon({
       className: 'custom-marker' + (isCollected ? ' collected' : ''),
       html: item.emoji,
       iconSize: [38, 38],
       iconAnchor: [19, 19]
     });
-
     const marker = L.marker([item.lat, item.lng], { icon: icon }).addTo(mapInstance);
-
     marker.bindPopup(`
       <div style="text-align:center; font-family:Arial;">
         <div style="font-size:32px;">${item.emoji}</div>
@@ -128,7 +189,6 @@ function initMap() {
 function renderItemsList() {
   const container = document.getElementById('items-container');
   container.innerHTML = '';
-
   items.forEach(item => {
     const div = document.createElement('div');
     div.className = 'item-icon' + (collectedItems.includes(item.id) ? ' collected' : '');
@@ -142,13 +202,11 @@ function renderItemsList() {
 function updateProgress() {
   const count = collectedItems.length;
   const percent = (count / 10) * 100;
-
   document.getElementById('progress-text').textContent = `${count}/10`;
   document.getElementById('progress-bar').style.width = percent + '%';
 }
 
-// ====== TEST FUNCTION (manually collect for Day 2 testing) ======
-// You can test in browser console: collectItem(1)
+// ====== COLLECT ITEM ======
 window.collectItem = async function(itemId) {
   if (collectedItems.includes(itemId)) {
     console.log('Already collected!');
@@ -156,7 +214,6 @@ window.collectItem = async function(itemId) {
   }
   collectedItems.push(itemId);
 
-  // Update Firebase
   try {
     if (playerDocId) {
       const playerRef = doc(db, "players", playerDocId);
@@ -166,18 +223,15 @@ window.collectItem = async function(itemId) {
     console.log('Firebase update failed:', e);
   }
 
-  // Refresh UI
   initMap();
   renderItemsList();
   updateProgress();
-
   console.log(`✅ Collected: ${items.find(i => i.id === itemId).name}`);
 };
 
 // ============================================
 // DAY 3: CAMERA MODE + GPS + ITEM DETECTION
 // ============================================
-
 let videoStream = null;
 let currentNearbyItem = null;
 let locationWatcherId = null;
@@ -188,10 +242,9 @@ window.openCameraMode = async function() {
   showScreen('screen-camera');
   updateCameraProgress();
 
-  // Try to start camera
   try {
     videoStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'environment' }, // back camera
+      video: { facingMode: 'environment' },
       audio: false
     });
     document.getElementById('camera-video').srcObject = videoStream;
@@ -201,18 +254,15 @@ window.openCameraMode = async function() {
     console.error('Camera error:', err);
   }
 
-  // Start GPS tracking
   startLocationTracking();
 };
 
 // 🎯 STEP 2: Close Camera Screen
 window.closeCameraMode = function() {
-  // Stop camera
   if (videoStream) {
     videoStream.getTracks().forEach(track => track.stop());
     videoStream = null;
   }
-  // Stop GPS
   if (locationWatcherId !== null) {
     navigator.geolocation.clearWatch(locationWatcherId);
     locationWatcherId = null;
@@ -227,10 +277,9 @@ function startLocationTracking() {
     document.getElementById('status-text').textContent = '⚠️ GPS not supported. Use Demo mode!';
     return;
   }
-
   locationWatcherId = navigator.geolocation.watchPosition(
     (pos) => {
-      if (demoLocationActive) return; // skip if demo mode is on
+      if (demoLocationActive) return;
       checkNearbyItems(pos.coords.latitude, pos.coords.longitude);
     },
     (err) => {
@@ -240,9 +289,9 @@ function startLocationTracking() {
   );
 }
 
-// 🎯 STEP 4: Calculate Distance Between Two Points (Haversine Formula)
+// 🎯 STEP 4: Haversine Formula
 function getDistanceMeters(lat1, lng1, lat2, lng2) {
-  const R = 6371000; // Earth's radius in meters
+  const R = 6371000;
   const toRad = (deg) => deg * Math.PI / 180;
   const dLat = toRad(lat2 - lat1);
   const dLng = toRad(lng2 - lng1);
@@ -254,14 +303,12 @@ function getDistanceMeters(lat1, lng1, lat2, lng2) {
 
 // 🎯 STEP 5: Check if any item is nearby
 function checkNearbyItems(userLat, userLng) {
-  const TRIGGER_DISTANCE = 30; // 30 meters
-
+  const TRIGGER_DISTANCE = 30;
   let nearest = null;
   let minDist = Infinity;
 
   items.forEach(item => {
-    if (collectedItems.includes(item.id)) return; // skip already-collected
-
+    if (collectedItems.includes(item.id)) return;
     const dist = getDistanceMeters(userLat, userLng, item.lat, item.lng);
     if (dist < TRIGGER_DISTANCE && dist < minDist) {
       minDist = dist;
@@ -298,19 +345,11 @@ window.collectCurrentItem = async function() {
   if (!currentNearbyItem) return;
   const item = currentNearbyItem;
 
-  // Use existing collectItem function from Day 2
   await collectItem(item.id);
-
-  // Show success popup
   showSuccessPopup(item);
-
-  // Hide item
   hideARItem();
-
-  // Update progress display
   updateCameraProgress();
 
-  // Check rewards
   if (collectedItems.length === 5) {
     setTimeout(() => alert('🎉 5 items collected! You unlocked 2 coupons!'), 1500);
   }
@@ -341,19 +380,14 @@ function showSuccessPopup(item) {
   setTimeout(() => popup.remove(), 2000);
 }
 
-// 🎯 STEP 10: DEMO MODE (Simulate walking to next item)
+// 🎯 STEP 10: DEMO MODE
 window.simulateLocation = function() {
   demoLocationActive = true;
-
-  // Find next uncollected item
   const nextItem = items.find(i => !collectedItems.includes(i.id));
-
   if (!nextItem) {
     document.getElementById('status-text').textContent = '🏆 All items collected!';
     return;
   }
-
-  // Pretend user is right next to this item
   checkNearbyItems(nextItem.lat, nextItem.lng);
   document.getElementById('status-text').textContent =
     `🎬 Demo Mode: You are near ${nextItem.store}`;

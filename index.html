@@ -20,6 +20,16 @@
     <p class="desc">Collect 10 hidden items. Win exclusive coupons.</p>
     <input type="text" id="name" placeholder="Your Name" />
     <input type="tel" id="phone" placeholder="Phone Number" maxlength="10" />
+
+    <!-- ✅ NEW (Step 2): Flight Departure Time -->
+    <label for="flightTime" style="display:block; text-align:left; font-size:13px; color:#555; margin:6px 2px 4px;">
+      Flight Departure Time <span style="color:#e11d48;">*</span>
+    </label>
+    <input type="time" id="flightTime" required />
+    <small style="display:block; text-align:left; color:#888; font-size:12px; margin:-6px 2px 12px;">
+      If the time has already passed today, we'll treat it as tomorrow.
+    </small>
+
     <button onclick="signupUser()">Start Playing →</button>
   </div>
 </div>
@@ -63,6 +73,12 @@
     <div class="progress-circle">
       <span id="progress-text">0/10</span>
     </div>
+  </div>
+
+  <!-- ✅ NEW (Step 2): Flight countdown card (near progress bar) -->
+  <div id="flightTimerCard" class="flight-timer-card">
+    <div class="flight-timer-label">✈️ Time until departure</div>
+    <div id="flightTimeLeft" class="flight-time-value neutral">--:--:--</div>
   </div>
 
   <!-- Progress Bar -->
@@ -113,10 +129,10 @@
 </div>
 
 <!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+https://unpkg.com/leaflet@1.9.4/dist/leaflet.js
 
 <!-- Firebase + App Logic -->
-<script type="module" src="app.js"></script>
+app.js
 
 </body>
 </html>
