@@ -743,9 +743,7 @@ async function() {
 
     setTimeout(() => {
 
-      alert(
-        '🎉 2 Coupons Unlocked!'
-      );
+      showCelebration('🎉 2 Coupons Unlocked!', 'Check your reward wallet 🎟');
 
     }, 1500);
   }
@@ -754,9 +752,7 @@ async function() {
 
     setTimeout(() => {
 
-      alert(
-        '🏆 4 Coupons Unlocked!'
-      );
+      showCelebration('🏆 4 Coupons Unlocked!', 'All rewards unlocked!');
 
       closeCameraMode();
 
@@ -831,3 +827,64 @@ window.simulateLocation = function() {
   ).textContent =
     `🎬 Demo Mode: You are near ${nextItem.store}`;
 };
+
+
+// ============================================
+// CELEBRATION
+// ============================================
+
+function launchConfetti() {
+
+  const container =
+    document.getElementById('confetti-container');
+
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  for (let i = 0; i < 80; i++) {
+
+    const confetti =
+      document.createElement('div');
+
+    confetti.style.position = 'absolute';
+    confetti.style.width = '10px';
+    confetti.style.height = '10px';
+    confetti.style.background =
+      ['#ff0','#0ff','#f0f','#0f0','#f00'][Math.floor(Math.random()*5)];
+
+    confetti.style.left =
+      Math.random() * 100 + '%';
+
+    confetti.style.top = '-20px';
+
+    confetti.style.borderRadius = '50%';
+
+    confetti.style.animation =
+      `fall ${2 + Math.random()*2}s linear forwards`;
+
+    container.appendChild(confetti);
+  }
+}
+
+function showCelebration(title, subtitle) {
+
+  const popup =
+    document.getElementById('celebration-popup');
+
+  document.getElementById(
+    'celebration-title'
+  ).textContent = title;
+
+  document.getElementById(
+    'celebration-subtitle'
+  ).textContent = subtitle;
+
+  popup.classList.remove('hidden');
+
+  launchConfetti();
+
+  setTimeout(() => {
+    popup.classList.add('hidden');
+  }, 4000);
+}

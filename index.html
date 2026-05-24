@@ -3,7 +3,6 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>SkyHunt - Hyderabad Airport Game</title>
@@ -134,7 +133,6 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   </div>
 
-  <!-- TIMER + COUPONS -->
   <div class="top-info-row">
 
     <div class="flight-timer" id="flight-timer">
@@ -152,7 +150,6 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   </div>
 
-  <!-- PROGRESS -->
   <div class="progress-bar-container">
 
     <div
@@ -162,10 +159,8 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   </div>
 
-  <!-- MAP -->
   <div id="map"></div>
 
-  <!-- ITEMS -->
   <div class="items-list">
 
     <h4>🎁 Items to Find</h4>
@@ -174,7 +169,6 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   </div>
 
-  <!-- CAMERA -->
   <button
     class="camera-btn"
     onclick="openCameraMode()">
@@ -185,7 +179,6 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
 </div>
 
-<!-- COUPON POPUP -->
 <div
   id="coupon-modal"
   class="coupon-modal hidden">
@@ -201,6 +194,7 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         onclick="closeCoupons()">
 
         ✕
+
       </button>
 
     </div>
@@ -212,6 +206,30 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     </div>
 
   </div>
+
+</div>
+
+<div
+  id="celebration-popup"
+  class="celebration-popup hidden">
+
+  <div class="celebration-content">
+
+    <div class="celebration-emoji">
+      🎉
+    </div>
+
+    <h2 id="celebration-title">
+      Coupons Unlocked!
+    </h2>
+
+    <p id="celebration-subtitle">
+      Amazing job!
+    </p>
+
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
 
 </div>
 

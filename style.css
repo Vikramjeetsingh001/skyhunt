@@ -56,8 +56,6 @@ h2 {
     color: #333;
 }
 
-/* INPUTS */
-
 input {
     width: 100%;
     padding: 14px;
@@ -71,8 +69,6 @@ input {
 input:focus {
     border-color: #000;
 }
-
-/* FLIGHT INPUT */
 
 .input-label {
     display: block;
@@ -97,12 +93,6 @@ input:focus {
     cursor: pointer;
 }
 
-.time-input:focus {
-    border-color: #000;
-}
-
-/* BUTTONS */
-
 button {
     width: 100%;
     padding: 15px;
@@ -114,68 +104,7 @@ button {
     font-weight: bold;
     cursor: pointer;
     margin-top: 10px;
-    transition: transform 0.2s;
 }
-
-button:hover {
-    transform: scale(1.02);
-}
-
-/* WARNING */
-
-.warning-text {
-    font-size: 16px;
-    line-height: 1.7;
-    padding: 20px;
-    background: #fff3cd;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    color: #856404;
-}
-
-/* RULES */
-
-.rules {
-    list-style: none;
-    text-align: left;
-    margin-bottom: 25px;
-}
-
-.rules li {
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
-    font-size: 15px;
-}
-
-/* GAME */
-
-#screen-game {
-    max-width: 500px;
-    width: 100%;
-    background: #fff;
-    color: #000;
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-}
-
-.game-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.game-header h3 {
-    font-size: 18px;
-}
-
-.small-text {
-    font-size: 13px;
-    color: #666;
-}
-
-/* TIMER + COUPONS */
 
 .top-info-row {
     display: flex;
@@ -205,74 +134,7 @@ button:hover {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 14px;
 }
-
-/* COUPON MODAL */
-
-.coupon-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    z-index: 999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-.coupon-modal.hidden {
-    display: none;
-}
-
-.coupon-content {
-    background: #fff;
-    width: 100%;
-    max-width: 420px;
-    border-radius: 20px;
-    padding: 22px;
-}
-
-.coupon-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.close-coupon-btn {
-    width: auto;
-    margin: 0;
-    padding: 0;
-    background: none;
-    color: #000;
-    font-size: 24px;
-}
-
-.coupon-list {
-    display: grid;
-    gap: 14px;
-}
-
-.coupon-card {
-    background: linear-gradient(135deg,#000,#333);
-    color: #fff;
-    padding: 20px;
-    border-radius: 16px;
-}
-
-.coupon-brand {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-
-.coupon-offer {
-    font-size: 15px;
-    opacity: 0.9;
-}
-
-/* PROGRESS */
 
 .progress-circle {
     width: 60px;
@@ -302,24 +164,12 @@ button:hover {
     transition: width 0.4s ease;
 }
 
-/* MAP */
-
 #map {
     width: 100%;
     height: 320px;
     border-radius: 14px;
     border: 2px solid #000;
     margin-bottom: 20px;
-}
-
-/* ITEMS */
-
-.items-list {
-    margin-bottom: 20px;
-}
-
-.items-list h4 {
-    margin-bottom: 10px;
 }
 
 #items-container {
@@ -349,7 +199,63 @@ button:hover {
     border-color: #f5b800;
 }
 
-/* CAMERA */
+.coupon-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.coupon-modal.hidden {
+    display: none;
+}
+
+.coupon-content {
+    background: #fff;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 20px;
+    padding: 22px;
+    color: #000;
+}
+
+.coupon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close-coupon-btn {
+    width: auto;
+    background: none;
+    color: #000;
+    margin: 0;
+    padding: 0;
+    font-size: 24px;
+}
+
+.coupon-list {
+    display: grid;
+    gap: 14px;
+}
+
+.coupon-card {
+    background: linear-gradient(135deg,#000,#333);
+    color: #fff;
+    padding: 20px;
+    border-radius: 16px;
+}
+
+.coupon-brand {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
 
 .camera-btn {
     width: 100%;
@@ -378,7 +284,6 @@ button:hover {
     z-index: 10;
     display: flex;
     justify-content: space-between;
-    align-items: center;
     padding: 15px 18px;
 }
 
@@ -402,12 +307,9 @@ button:hover {
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 10;
     padding: 20px;
     text-align: center;
 }
-
-/* AR */
 
 .ar-item {
     position: absolute;
@@ -433,8 +335,6 @@ button:hover {
     display: inline-block;
 }
 
-/* POPUP */
-
 .success-popup {
     position: fixed;
     top: 50%;
@@ -446,4 +346,46 @@ button:hover {
     border-radius: 20px;
     z-index: 100;
     text-align: center;
+}
+
+.celebration-popup{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.75);
+    z-index:2000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+.celebration-popup.hidden{
+    display:none;
+}
+
+.celebration-content{
+    background:#fff;
+    color:#000;
+    padding:40px;
+    border-radius:24px;
+    text-align:center;
+    z-index:2;
+}
+
+.celebration-emoji{
+    font-size:70px;
+    margin-bottom:12px;
+}
+
+.confetti-container{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(120vh) rotate(720deg);
+    opacity: 0;
+  }
 }
